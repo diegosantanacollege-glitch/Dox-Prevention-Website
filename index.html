@@ -73,6 +73,63 @@
             font-size: 24px;
             cursor: pointer;
         }
+        /* Center everything horizontally */
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* File control bar */
+.file-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+    width: 100%;
+    margin-top: 30px;
+}
+
+/* Action buttons */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+    flex-wrap: wrap;
+    width: 100%;
+    margin-top: 15px;
+}
+
+/* Buttons themselves */
+button {
+    background: var(--aegean-blue);
+    color: var(--marble-white);
+    border: 2px solid var(--gold-accent);
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-family: "Cinzel", serif;
+    letter-spacing: 1px;
+    font-size: 1rem;
+    transition: 0.3s;
+    cursor: pointer;
+    min-width: 220px; /* keeps them wide and consistent */
+    text-align: center;
+}
+
+button:hover {
+    background: var(--gold-accent);
+    color: var(--deep-navy);
+    transform: translateY(-2px);
+}
+
+/* Active file box centered */
+#active-file {
+    width: 90%;
+    margin: 20px auto;
+    text-align: center;
+}
+
     </style>
 </head>
 <body>
