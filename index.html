@@ -8,56 +8,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
-        /* Fun Facts Video Container */
-.fun-facts-container {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 350px;
-    height: 350px;
-    pointer-events: none; /* video won't block clicks */
-    z-index: 5;
-}
-
-/* Transparent MP4 */
-.fun-facts-video {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
-
-/* Text Bubble */
-.fun-facts-bubble {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 280px;
-    background: rgba(255,255,255,0.9);
-    color: #000;
-    padding: 12px 16px;
-    border-radius: 18px;
-    font-family: "Cinzel", serif;
-    font-size: 0.85rem;
-    text-align: center;
-    box-shadow: 0px 4px 10px rgba(0,0,0,0.3);
-    animation: bubbleFade 0.5s ease-in-out;
-}
-
-/* Bubble fade animation */
-@keyframes bubbleFade {
-    from { opacity: 0; transform: translateX(-50%) translateY(10px); }
-    to { opacity: 1; transform: translateX(-50%) translateY(0); }
-}
-
-        
         :root {
-            --aegean-blue: #0e4d92;
-            --marble-white: #f5f5f0;
-            --gold-accent: #c9a635;
-            --deep-navy: #0a1a2a;
-            --glass: rgba(10, 26, 42, 0.62);
-            --glass-border: rgba(201, 166, 53, 0.35);
+            --gold: #d4af37;
+            --white: #ffffff;
+            --ink: #0b0b0b;
+            --panel: rgba(0, 0, 0, 0.55);
             --radius: 14px;
         }
 
@@ -65,13 +20,13 @@
 
         body {
             min-height: 100vh;
-            background: var(--deep-navy);
-            color: var(--marble-white);
+            background: #000;
+            color: var(--white);
             font-family: "Inter", system-ui, sans-serif;
             line-height: 1.5;
         }
 
-        /* ---------- Background video ---------- */
+        /* ---------- Background video (blue tint, looping) ---------- */
         #bg-video {
             position: fixed;
             inset: 0;
@@ -79,14 +34,15 @@
             height: 100%;
             object-fit: cover;
             z-index: -2;
+            /* blue tint */
+            filter: grayscale(1) sepia(1) hue-rotate(185deg) saturate(3.5) brightness(0.95);
         }
+        /* light neutral shade (not blue) just to keep text readable */
         .bg-overlay {
             position: fixed;
             inset: 0;
             z-index: -1;
-            background:
-                radial-gradient(ellipse at top, rgba(14, 77, 146, 0.25), transparent 60%),
-                linear-gradient(180deg, rgba(10, 26, 42, 0.55), rgba(10, 26, 42, 0.8));
+            background: rgba(0, 0, 0, 0.18);
         }
 
         /* ---------- Layout ---------- */
@@ -106,54 +62,53 @@
             font-size: clamp(2.2rem, 6vw, 3.8rem);
             letter-spacing: 4px;
             text-transform: uppercase;
-            background: linear-gradient(90deg, var(--marble-white), var(--gold-accent));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 0 40px rgba(201, 166, 53, 0.25);
+            color: var(--gold);
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.6);
         }
         .tagline {
             margin-top: 10px;
-            opacity: 0.8;
+            opacity: 0.9;
             letter-spacing: 1px;
+            text-shadow: 0 1px 10px rgba(0, 0, 0, 0.7);
         }
         .divider {
             width: 90px;
             height: 3px;
             margin: 18px auto 0;
             border-radius: 3px;
-            background: var(--gold-accent);
+            background: var(--gold);
         }
 
-        /* ---------- Glass cards ---------- */
+        /* ---------- Cards ---------- */
         .card, .info-section {
             width: 100%;
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
+            background: var(--panel);
+            border: 1px solid var(--gold);
             border-radius: var(--radius);
             padding: 24px;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
         }
 
-        /* ---------- Drop zone ---------- */
+        /* ---------- Drop zone: white rectangle ---------- */
         .dropzone {
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 16px;
             padding: 36px 20px;
-            border: 2px dashed var(--glass-border);
-            border-radius: var(--radius);
-            transition: 0.25s;
+            border: 2px solid var(--white);
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.08);
+            transition: background 0.3s, box-shadow 0.3s;
             text-align: center;
         }
         .dropzone.dragover {
-            border-color: var(--gold-accent);
-            background: rgba(201, 166, 53, 0.08);
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 22px rgba(255, 255, 255, 0.45);
         }
-        .dropzone p { opacity: 0.75; font-size: 0.95rem; }
+        .dropzone p { opacity: 0.9; font-size: 0.95rem; }
 
         .file-controls, .action-buttons {
             display: flex;
@@ -170,36 +125,38 @@
             font-size: 0.95rem;
             padding: 10px 16px;
             border-radius: 999px;
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.08);
             display: inline-block;
-            align-self: center;
         }
-        #active-file span { color: var(--gold-accent); font-weight: 600; word-break: break-all; }
+        #active-file span { color: var(--gold); font-weight: 600; word-break: break-all; }
 
-        /* ---------- Buttons ---------- */
+        /* ---------- Buttons: dark + gold, soft glow ---------- */
         button {
-            background: var(--aegean-blue);
-            color: var(--marble-white);
-            border: 2px solid var(--gold-accent);
+            background: var(--ink);
+            color: var(--gold);
+            border: 2px solid var(--gold);
             padding: 12px 24px;
-            border-radius: 8px;
+            border-radius: 6px;
             font-family: "Cinzel", serif;
             font-weight: 700;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
             font-size: 0.95rem;
             cursor: pointer;
             min-width: 200px;
-            transition: 0.25s;
+            transition: box-shadow 0.3s ease, background 0.3s ease, color 0.3s ease;
         }
-        button:hover:not(:disabled) {
-            background: var(--gold-accent);
-            color: var(--deep-navy);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 18px rgba(201, 166, 53, 0.35);
+        button:hover:not(:disabled),
+        button:focus-visible:not(:disabled) {
+            background: #1a1608;
+            color: #f3d567;
+            box-shadow: 0 0 14px rgba(212, 175, 55, 0.65), inset 0 0 8px rgba(212, 175, 55, 0.25);
+            outline: none;
+        }
+        button:active:not(:disabled) {
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.85), inset 0 0 12px rgba(212, 175, 55, 0.35);
         }
         button:disabled { opacity: 0.45; cursor: not-allowed; }
         button.secondary { background: transparent; }
-        button.danger { background: #8b1e2d; }
 
         /* ---------- Removal controls ---------- */
         .removal-controls {
@@ -210,7 +167,7 @@
         .removal-controls.visible { display: flex; }
         .removal-controls h3 {
             font-family: "Cinzel", serif;
-            color: var(--gold-accent);
+            color: var(--gold);
             letter-spacing: 1px;
         }
         .checkbox-container {
@@ -224,15 +181,15 @@
             align-items: center;
             gap: 8px;
             padding: 8px 14px;
-            border: 1px solid var(--glass-border);
+            border: 1px solid var(--gold);
             border-radius: 999px;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(0, 0, 0, 0.4);
             cursor: pointer;
-            transition: 0.2s;
+            transition: box-shadow 0.25s;
             user-select: none;
         }
-        .checkbox-item:hover { background: rgba(201, 166, 53, 0.15); }
-        .checkbox-item input { accent-color: var(--gold-accent); width: 16px; height: 16px; }
+        .checkbox-item:hover { box-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
+        .checkbox-item input { accent-color: var(--gold); width: 16px; height: 16px; }
 
         /* ---------- Info tables ---------- */
         #sections-container {
@@ -244,10 +201,10 @@
         .info-section h2 {
             font-family: "Cinzel", serif;
             font-size: 1.2rem;
-            color: var(--gold-accent);
+            color: var(--gold);
             margin-bottom: 14px;
             padding-bottom: 8px;
-            border-bottom: 1px solid var(--glass-border);
+            border-bottom: 1px solid var(--gold);
         }
         table { width: 100%; border-collapse: collapse; }
         th, td {
@@ -255,19 +212,18 @@
             text-align: left;
             vertical-align: top;
             font-size: 0.92rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
         }
-        th { width: 35%; font-weight: 600; opacity: 0.85; }
+        th { width: 35%; font-weight: 600; }
         td { word-break: break-word; }
         tr:last-child th, tr:last-child td { border-bottom: none; }
 
-        /* ---------- Popup ---------- */
+        /* ---------- Popup (your art) ---------- */
         .popup {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(4px);
+            background: rgba(0, 0, 0, 0.8);
             justify-content: center;
             align-items: center;
             z-index: 10;
@@ -276,11 +232,11 @@
             position: relative;
             background: #fff;
             padding: 10px;
-            border-radius: 12px;
+            border-radius: 8px;
             max-width: 92vw;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
         }
-        .popup-content img { width: 400px; max-width: 100%; border-radius: 8px; display: block; }
+        .popup-content img { width: 400px; max-width: 100%; border-radius: 4px; display: block; }
         #close {
             position: absolute;
             top: -14px;
@@ -290,38 +246,28 @@
             line-height: 32px;
             text-align: center;
             font-size: 22px;
-            color: var(--deep-navy);
-            background: var(--gold-accent);
+            color: var(--ink);
+            background: var(--gold);
             border-radius: 50%;
             cursor: pointer;
         }
 
-        footer { opacity: 0.55; font-size: 0.8rem; text-align: center; }
+        footer { opacity: 0.7; font-size: 0.8rem; text-align: center; text-shadow: 0 1px 8px #000; }
 
         @media (max-width: 600px) {
             button { width: 100%; }
             th { width: 40%; }
         }
         @media (prefers-reduced-motion: reduce) {
-            #bg-video { display: none; }
             * { transition: none !important; }
         }
     </style>
 </head>
 <body>
-<div class="fun-facts-container">
-    <video autoplay muted loop playsinline class="fun-facts-video">
-        <source src="frontend/0000.mp4" type="video/mp4">
-    </video>
 
-    <div class="fun-facts-bubble" id="funFactsBubble">
-        Loading fun facts...
-    </div>
-</div>
-
-    <!-- Background video (0000.mp4 lives in the repo root next to this file) -->
+    <!-- Background video: blue tinted, continuous loop -->
     <video id="bg-video" autoplay muted loop playsinline preload="auto">
-        <source src="frontend/0000.mp4" type="video/mp4">
+        <source src="0000.mp4" type="video/mp4">
     </video>
     <div class="bg-overlay"></div>
 
@@ -359,7 +305,7 @@
             <div class="checkbox-container" id="checkbox-container"></div>
             <div class="action-buttons">
                 <button type="button" id="remove-selected-btn">Remove Selected</button>
-                <button type="button" id="remove-all-btn" class="danger">Remove All</button>
+                <button type="button" id="remove-all-btn">Remove All</button>
             </div>
         </section>
 
@@ -398,10 +344,15 @@
         popup.addEventListener('click', e => { if (e.target === popup) closePopup(); });
         document.addEventListener('keydown', e => { if (e.key === 'Escape') closePopup(); });
 
-        // Some browsers block autoplay until interaction; retry once on first click
+        /* ---------------- BACKGROUND VIDEO LOOP ---------------- */
         const bgVideo = document.getElementById('bg-video');
         bgVideo.play().catch(() => {
             document.addEventListener('click', () => bgVideo.play(), { once: true });
+        });
+        // Fallback: restart if the loop attribute is ever ignored
+        bgVideo.addEventListener('ended', () => {
+            bgVideo.currentTime = 0;
+            bgVideo.play();
         });
 
         /* ---------------- MAIN FUNCTIONALITY ---------------- */
