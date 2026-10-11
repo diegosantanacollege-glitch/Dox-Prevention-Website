@@ -266,10 +266,19 @@
     </style>
 </head>
 <body>
+<div class="fun-facts-container">
+    <video autoplay muted loop playsinline class="fun-facts-video">
+        <source src="frontend/0000.mp4" type="video/mp4">
+    </video>
+
+    <div class="fun-facts-bubble" id="funFactsBubble">
+        Loading fun facts...
+    </div>
+</div>
 
     <!-- Background video (0000.mp4 lives in the repo root next to this file) -->
     <video id="bg-video" autoplay muted loop playsinline preload="auto">
-        <source src="0000.mp4" type="video/mp4">
+        <source src="frontend/0000.mp4" type="video/mp4">
     </video>
     <div class="bg-overlay"></div>
 
