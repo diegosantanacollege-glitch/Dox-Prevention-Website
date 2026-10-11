@@ -6,11 +6,11 @@
     <title>Dox Prevention</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --gold: #d4af37;
             --white: #ffffff;
+            --gold: #d4af37;
             --ink: #0b0b0b;
             --panel: rgba(0, 0, 0, 0.55);
             --radius: 14px;
@@ -24,6 +24,7 @@
             color: var(--white);
             font-family: "Inter", system-ui, sans-serif;
             line-height: 1.5;
+            overflow-x: hidden;
         }
 
         /* ---------- Background video (blue tint, looping) ---------- */
@@ -34,22 +35,22 @@
             height: 100%;
             object-fit: cover;
             z-index: -2;
-            /* blue tint */
             filter: grayscale(1) sepia(1) hue-rotate(185deg) saturate(3.5) brightness(0.95);
         }
-        /* light neutral shade (not blue) just to keep text readable */
         .bg-overlay {
             position: fixed;
             inset: 0;
             z-index: -1;
-            background: rgba(0, 0, 0, 0.18);
+            background: rgba(0, 0, 0, 0.2);
         }
 
         /* ---------- Layout ---------- */
         main {
+            position: relative;
+            z-index: 2;
             width: min(920px, 92%);
             margin: 0 auto;
-            padding: 56px 0 80px;
+            padding: 70px 0 260px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -57,38 +58,46 @@
         }
 
         header { text-align: center; }
+
+        /* Logo: bold white, stretched vertically */
         h1 {
+            display: inline-block;
             font-family: "Cinzel", serif;
-            font-size: clamp(2.2rem, 6vw, 3.8rem);
-            letter-spacing: 4px;
+            font-weight: 900;
+            font-size: clamp(2.4rem, 7vw, 4.4rem);
+            letter-spacing: 6px;
             text-transform: uppercase;
-            color: var(--gold);
-            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.6);
+            color: var(--white);
+            transform: scaleY(1.7);
+            transform-origin: center;
+            margin: 34px 0 40px;
+            text-shadow: 0 0 24px rgba(255, 255, 255, 0.35), 0 4px 18px rgba(0, 0, 0, 0.8);
         }
         .tagline {
             margin-top: 10px;
-            opacity: 0.9;
-            letter-spacing: 1px;
-            text-shadow: 0 1px 10px rgba(0, 0, 0, 0.7);
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            color: var(--white);
+            text-shadow: 0 1px 12px rgba(0, 0, 0, 0.9);
         }
         .divider {
-            width: 90px;
-            height: 3px;
+            width: 110px;
+            height: 4px;
             margin: 18px auto 0;
             border-radius: 3px;
-            background: var(--gold);
+            background: var(--white);
         }
 
         /* ---------- Cards ---------- */
         .card, .info-section {
             width: 100%;
             background: var(--panel);
-            border: 1px solid var(--gold);
+            border: 2px solid var(--white);
             border-radius: var(--radius);
             padding: 24px;
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
         }
 
         /* ---------- Drop zone: white rectangle ---------- */
@@ -98,17 +107,17 @@
             align-items: center;
             gap: 16px;
             padding: 36px 20px;
-            border: 2px solid var(--white);
+            border: 3px solid var(--white);
             border-radius: 6px;
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.1);
             transition: background 0.3s, box-shadow 0.3s;
             text-align: center;
         }
         .dropzone.dragover {
-            background: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 0 22px rgba(255, 255, 255, 0.45);
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 0 26px rgba(255, 255, 255, 0.55);
         }
-        .dropzone p { opacity: 0.9; font-size: 0.95rem; }
+        .dropzone p { font-weight: 600; font-size: 0.98rem; }
 
         .file-controls, .action-buttons {
             display: flex;
@@ -123,22 +132,24 @@
             margin-top: 18px;
             text-align: center;
             font-size: 0.95rem;
-            padding: 10px 16px;
+            font-weight: 600;
+            padding: 10px 18px;
             border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
             background: rgba(255, 255, 255, 0.08);
             display: inline-block;
         }
-        #active-file span { color: var(--gold); font-weight: 600; word-break: break-all; }
+        #active-file span { color: var(--gold); font-weight: 700; word-break: break-all; }
 
-        /* ---------- Buttons: dark + gold, soft glow ---------- */
+        /* ---------- Buttons: white, soft glow ---------- */
         button {
-            background: var(--ink);
-            color: var(--gold);
-            border: 2px solid var(--gold);
-            padding: 12px 24px;
+            background: var(--white);
+            color: var(--ink);
+            border: 2px solid var(--white);
+            padding: 13px 26px;
             border-radius: 6px;
             font-family: "Cinzel", serif;
-            font-weight: 700;
+            font-weight: 800;
             letter-spacing: 1.5px;
             font-size: 0.95rem;
             cursor: pointer;
@@ -147,16 +158,21 @@
         }
         button:hover:not(:disabled),
         button:focus-visible:not(:disabled) {
-            background: #1a1608;
-            color: #f3d567;
-            box-shadow: 0 0 14px rgba(212, 175, 55, 0.65), inset 0 0 8px rgba(212, 175, 55, 0.25);
+            box-shadow: 0 0 16px rgba(255, 255, 255, 0.8), 0 0 4px rgba(255, 255, 255, 0.9);
             outline: none;
         }
         button:active:not(:disabled) {
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.85), inset 0 0 12px rgba(212, 175, 55, 0.35);
+            box-shadow: 0 0 24px rgba(255, 255, 255, 1);
         }
-        button:disabled { opacity: 0.45; cursor: not-allowed; }
-        button.secondary { background: transparent; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        button.secondary {
+            background: transparent;
+            color: var(--white);
+        }
+        button.secondary:hover:not(:disabled),
+        button.secondary:focus-visible:not(:disabled) {
+            background: rgba(255, 255, 255, 0.12);
+        }
 
         /* ---------- Removal controls ---------- */
         .removal-controls {
@@ -167,7 +183,8 @@
         .removal-controls.visible { display: flex; }
         .removal-controls h3 {
             font-family: "Cinzel", serif;
-            color: var(--gold);
+            font-weight: 800;
+            color: var(--white);
             letter-spacing: 1px;
         }
         .checkbox-container {
@@ -181,15 +198,16 @@
             align-items: center;
             gap: 8px;
             padding: 8px 14px;
-            border: 1px solid var(--gold);
+            font-weight: 600;
+            border: 2px solid var(--white);
             border-radius: 999px;
             background: rgba(0, 0, 0, 0.4);
             cursor: pointer;
             transition: box-shadow 0.25s;
             user-select: none;
         }
-        .checkbox-item:hover { box-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
-        .checkbox-item input { accent-color: var(--gold); width: 16px; height: 16px; }
+        .checkbox-item:hover { box-shadow: 0 0 12px rgba(255, 255, 255, 0.6); }
+        .checkbox-item input { accent-color: #fff; width: 16px; height: 16px; }
 
         /* ---------- Info tables ---------- */
         #sections-container {
@@ -200,11 +218,12 @@
         }
         .info-section h2 {
             font-family: "Cinzel", serif;
-            font-size: 1.2rem;
-            color: var(--gold);
+            font-weight: 800;
+            font-size: 1.25rem;
+            color: var(--white);
             margin-bottom: 14px;
             padding-bottom: 8px;
-            border-bottom: 1px solid var(--gold);
+            border-bottom: 2px solid var(--white);
         }
         table { width: 100%; border-collapse: collapse; }
         th, td {
@@ -212,51 +231,104 @@
             text-align: left;
             vertical-align: top;
             font-size: 0.92rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.18);
         }
-        th { width: 35%; font-weight: 600; }
+        th { width: 35%; font-weight: 700; }
         td { word-break: break-word; }
         tr:last-child th, tr:last-child td { border-bottom: none; }
 
-        /* ---------- Popup (your art) ---------- */
+        /* ---------- Popup ---------- */
         .popup {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.85);
             justify-content: center;
             align-items: center;
-            z-index: 10;
+            z-index: 20;
+            padding: 16px;
         }
         .popup-content {
             position: relative;
-            background: #fff;
-            padding: 10px;
-            border-radius: 8px;
-            max-width: 92vw;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+            background: #000;
+            border: 3px solid var(--white);
+            padding: 28px 24px 24px;
+            border-radius: 10px;
+            max-width: 96vw;
+            text-align: center;
+            box-shadow: 0 0 60px rgba(255, 255, 255, 0.2);
         }
-        .popup-content img { width: 400px; max-width: 100%; border-radius: 4px; display: block; }
+        .popup-content h2 {
+            font-family: "Cinzel", serif;
+            font-weight: 900;
+            font-size: clamp(1.6rem, 5vw, 2.6rem);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--white);
+        }
+        .popup-content p {
+            margin: 8px 0 18px;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+        .popup-images {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .popup-images img {
+            width: 280px;
+            max-width: 100%;
+            border: 2px solid var(--white);
+            border-radius: 6px;
+            display: block;
+        }
         #close {
             position: absolute;
-            top: -14px;
-            right: -14px;
-            width: 34px;
-            height: 34px;
-            line-height: 32px;
+            top: -16px;
+            right: -16px;
+            width: 36px;
+            height: 36px;
+            line-height: 34px;
             text-align: center;
-            font-size: 22px;
+            font-size: 24px;
+            font-weight: 700;
             color: var(--ink);
-            background: var(--gold);
+            background: var(--white);
             border-radius: 50%;
             cursor: pointer;
         }
 
-        footer { opacity: 0.7; font-size: 0.8rem; text-align: center; text-shadow: 0 1px 8px #000; }
+        /* ---------- Garden (interactive plants) ---------- */
+        #garden {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 300px;
+            z-index: 3;
+            pointer-events: none;
+        }
+        .plant {
+            position: absolute;
+            bottom: -4px;
+            transform-origin: 50% 100%;
+            will-change: transform;
+        }
+        .plant svg { display: block; overflow: visible; }
+
+        footer {
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-align: center;
+            text-shadow: 0 1px 8px #000;
+        }
 
         @media (max-width: 600px) {
             button { width: 100%; }
             th { width: 40%; }
+            h1 { transform: scaleY(1.45); }
         }
         @media (prefers-reduced-motion: reduce) {
             * { transition: none !important; }
@@ -271,11 +343,19 @@
     </video>
     <div class="bg-overlay"></div>
 
-    <!-- Popup -->
+    <!-- Garden: flowers that rustle when the cursor passes over them -->
+    <div id="garden" aria-hidden="true"></div>
+
+    <!-- Popup with your two original pictures -->
     <div id="popup" class="popup">
         <div class="popup-content">
             <span id="close" role="button" aria-label="Close">&times;</span>
-            <img id="popup-image" src="frontend/nakedtorso0037.png" alt="Image">
+            <h2>We destroy metadata.</h2>
+            <p>Hidden locations, authors and device info never leave with your files.</p>
+            <div class="popup-images">
+                <img src="frontend/nakedtorso0037.png" alt="Original artwork 1">
+                <img src="frontend/nakedtorso0074.png" alt="Original artwork 2">
+            </div>
         </div>
     </div>
 
@@ -315,31 +395,15 @@
     </main>
 
     <script>
-        /* ---------------- POPUP IMAGE CYCLE ---------------- */
+        /* ---------------- POPUP ---------------- */
         const popup = document.getElementById('popup');
-        const popupImage = document.getElementById('popup-image');
         const closeBtn = document.getElementById('close');
 
-        const images = [
-            'frontend/nakedtorso0037.png',
-            'frontend/nakedtorso0074.png'
-        ];
-        let current = 0;
-        let cycleTimer = null;
+        // Shows on every page load. To show only once per session, wrap in:
+        // if (!sessionStorage.getItem('popupShown')) { ...; sessionStorage.setItem('popupShown','true'); }
+        popup.style.display = 'flex';
 
-        if (!sessionStorage.getItem('popupShown')) {
-            popup.style.display = 'flex';
-            sessionStorage.setItem('popupShown', 'true');
-            cycleTimer = setInterval(() => {
-                current = (current + 1) % images.length;
-                popupImage.src = images[current];
-            }, 2000);
-        }
-
-        function closePopup() {
-            popup.style.display = 'none';
-            if (cycleTimer) clearInterval(cycleTimer);
-        }
+        function closePopup() { popup.style.display = 'none'; }
         closeBtn.onclick = closePopup;
         popup.addEventListener('click', e => { if (e.target === popup) closePopup(); });
         document.addEventListener('keydown', e => { if (e.key === 'Escape') closePopup(); });
@@ -349,10 +413,131 @@
         bgVideo.play().catch(() => {
             document.addEventListener('click', () => bgVideo.play(), { once: true });
         });
-        // Fallback: restart if the loop attribute is ever ignored
         bgVideo.addEventListener('ended', () => {
             bgVideo.currentTime = 0;
             bgVideo.play();
+        });
+
+        /* ---------------- GARDEN: RUSTLING FLOWERS ---------------- */
+        const garden = document.getElementById('garden');
+        const NS = 'http://www.w3.org/2000/svg';
+        const STEM = '#9fd8a8';
+        const LEAF = '#7cc58b';
+
+        function el(name, attrs, parent) {
+            const e = document.createElementNS(NS, name);
+            for (const k in attrs) e.setAttribute(k, attrs[k]);
+            if (parent) parent.appendChild(e);
+            return e;
+        }
+
+        function makeDaisy(h) {
+            const w = 70, cx = 35, headY = 34;
+            const svg = el('svg', { width: w, height: h, viewBox: `0 0 ${w} ${h}` });
+            el('path', { d: `M${cx} ${h} Q${cx - 8} ${h * 0.55} ${cx} ${headY}`, stroke: STEM, 'stroke-width': 3.5, fill: 'none', 'stroke-linecap': 'round' }, svg);
+            el('path', { d: `M${cx - 3} ${h * 0.7} q-22 -6 -24 -22 q20 2 24 22z`, fill: LEAF }, svg);
+            el('path', { d: `M${cx - 2} ${h * 0.55} q20 -4 24 -20 q-20 0 -24 20z`, fill: LEAF }, svg);
+            const g = el('g', { transform: `translate(${cx} ${headY})` }, svg);
+            for (let i = 0; i < 12; i++) {
+                el('ellipse', { cx: 0, cy: -15, rx: 5, ry: 13, fill: '#fff', stroke: 'rgba(0,0,0,0.12)', 'stroke-width': 0.6, transform: `rotate(${i * 30})` }, g);
+            }
+            el('circle', { r: 7, fill: '#d4af37' }, g);
+            return { svg, w, headX: cx, headY };
+        }
+
+        function makeTulip(h) {
+            const w = 56, cx = 28, headY = 30;
+            const svg = el('svg', { width: w, height: h, viewBox: `0 0 ${w} ${h}` });
+            el('path', { d: `M${cx} ${h} Q${cx + 7} ${h * 0.5} ${cx} ${headY + 14}`, stroke: STEM, 'stroke-width': 3.5, fill: 'none', 'stroke-linecap': 'round' }, svg);
+            el('path', { d: `M${cx + 1} ${h * 0.8} q-24 -10 -20 -42 q22 14 20 42z`, fill: LEAF }, svg);
+            const g = el('g', { transform: `translate(${cx} ${headY})` }, svg);
+            el('path', { d: 'M-14 -4 Q-16 18 0 20 Q16 18 14 -4 L7 -20 L0 -6 L-7 -20 Z', fill: '#fff', stroke: 'rgba(0,0,0,0.15)', 'stroke-width': 0.8 }, g);
+            el('path', { d: 'M0 -6 Q-5 8 0 20 Q5 8 0 -6', fill: 'rgba(212,175,55,0.45)' }, g);
+            return { svg, w, headX: cx, headY };
+        }
+
+        function makeBlades(h) {
+            const w = 60, cx = 30;
+            const svg = el('svg', { width: w, height: h, viewBox: `0 0 ${w} ${h}` });
+            const blades = [[-20, 0.95], [-8, 1], [4, 0.85], [16, 0.7], [26, 0.9]];
+            blades.forEach(([dx, s]) => {
+                const top = h * (1 - s);
+                el('path', { d: `M${cx + dx * 0.3} ${h} Q${cx + dx * 0.4} ${h * 0.5} ${cx + dx} ${top}`, stroke: LEAF, 'stroke-width': 4, fill: 'none', 'stroke-linecap': 'round' }, svg);
+            });
+            // tiny gold buds
+            [[-20, 0.95], [16, 0.7]].forEach(([dx, s]) => {
+                el('circle', { cx: cx + dx, cy: h * (1 - s), r: 4, fill: '#d4af37' }, svg);
+            });
+            return { svg, w, headX: cx, headY: 6 };
+        }
+
+        const makers = [makeDaisy, makeTulip, makeBlades, makeDaisy, makeTulip];
+        let plants = [];
+
+        function buildGarden() {
+            garden.innerHTML = '';
+            plants = [];
+            const vw = window.innerWidth;
+            const count = Math.max(10, Math.round(vw / 80));
+            for (let i = 0; i < count; i++) {
+                const maker = makers[Math.floor(Math.random() * makers.length)];
+                const h = 120 + Math.random() * 150;
+                const { svg, w, headX, headY } = maker(h);
+                const wrap = document.createElement('div');
+                wrap.className = 'plant';
+                const left = (i + 0.2 + Math.random() * 0.6) / count * vw - w / 2;
+                wrap.style.left = left + 'px';
+                wrap.style.width = w + 'px';
+                wrap.style.height = h + 'px';
+                wrap.appendChild(svg);
+                garden.appendChild(wrap);
+                plants.push({
+                    wrap, angle: 0, vel: 0,
+                    phase: Math.random() * Math.PI * 2,
+                    speed: 0.6 + Math.random() * 0.6,
+                    // head position in viewport coordinates (garden is fixed at the bottom)
+                    hx: left + headX,
+                    hy: window.innerHeight - h + headY,
+                    h
+                });
+            }
+        }
+
+        let mx = -9999, my = -9999;
+        window.addEventListener('pointermove', e => { mx = e.clientX; my = e.clientY; });
+        window.addEventListener('pointerleave', () => { mx = my = -9999; });
+
+        let last = performance.now();
+        function tick(now) {
+            const dt = Math.min(0.033, (now - last) / 1000);
+            last = now;
+            const R = 190;
+            for (const p of plants) {
+                // Cursor push: stronger the closer the cursor is to the flower head or stem
+                const dx = p.hx - mx;
+                const dy = (p.hy + p.h * 0.35) - my;
+                const dist = Math.hypot(dx, dy);
+                let push = 0;
+                if (dist < R) {
+                    push = Math.sign(dx || 1) * (1 - dist / R) * 32;
+                }
+                const idle = Math.sin(now / 1000 * p.speed + p.phase) * 2.2;
+                const target = push + idle;
+                // spring physics for a natural rustle that overshoots and settles
+                const accel = (target - p.angle) * 70 - p.vel * 5.5;
+                p.vel += accel * dt;
+                p.angle += p.vel * dt;
+                p.wrap.style.transform = `rotate(${p.angle.toFixed(2)}deg)`;
+            }
+            requestAnimationFrame(tick);
+        }
+
+        buildGarden();
+        requestAnimationFrame(tick);
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(buildGarden, 200);
         });
 
         /* ---------------- MAIN FUNCTIONALITY ---------------- */
