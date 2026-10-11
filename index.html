@@ -26,9 +26,69 @@
             width: 100%;
             margin-top: 5px;
         }
+
+        /* Background video */
+        #bg-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.25; /* low opacity */
+            z-index: -1;
+        }
+
+        /* Popup styling */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .popup-content {
+            position: relative;
+            background: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .popup-content img {
+            width: 400px;
+            border-radius: 8px;
+        }
+
+        #close {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            font-size: 24px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
+
+    <!-- Background video -->
+    <video autoplay muted loop id="bg-video">
+        <source src="videoforwebsite.mp4" type="video/mp4">
+    </video>
+
+    <!-- Popup container -->
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <span id="close">&times;</span>
+            <img id="popup-image" src="frontend/nakedtorso0037.png" alt="Image">
+        </div>
+    </div>
 
     <main>
         <h1>Dox Prevention</h1>
@@ -60,6 +120,39 @@
     </main>
 
     <script>
+        /* ---------------- POPUP IMAGE CYCLE ---------------- */
+
+        const popup = document.getElementById('popup');
+        const popupImage = document.getElementById('popup-image');
+        const closeBtn = document.getElementById('close');
+
+        const images = [
+            'frontend/nakedtorso0037.png',
+            'frontend/nakedtorso0074.png'
+        ];
+
+        let current = 0;
+
+        // Show popup only once per session
+        if (!sessionStorage.getItem('popupShown')) {
+            popup.style.display = 'flex';
+            sessionStorage.setItem('popupShown', 'true');
+            cycleImages();
+        }
+
+        function cycleImages() {
+            setInterval(() => {
+                current = (current + 1) % images.length;
+                popupImage.src = images[current];
+            }, 2000); // change every 2 seconds
+        }
+
+        closeBtn.onclick = () => {
+            popup.style.display = 'none';
+        };
+
+        /* ---------------- ORIGINAL FUNCTIONALITY ---------------- */
+
         const fileInput = document.getElementById('file-input');
         const uploadBtn = document.getElementById('upload-btn');
         const removeFileBtn = document.getElementById('remove-file-btn');
@@ -69,14 +162,11 @@
         const checkboxContainer = document.getElementById('checkbox-container');
         const sectionsContainer = document.getElementById('sections-container');
 
-        // Function to dynamically render sections and checkboxes from JSON
         function renderSections(sectionsData) {
-            // Clear out any existing dynamic content
             checkboxContainer.innerHTML = '';
             sectionsContainer.innerHTML = '';
 
             for (const [sectionName, kvPairs] of Object.entries(sectionsData)) {
-                // 1. Create checkbox control ONLY if it is not "File Information"
                 if (sectionName !== "File Information") {
                     const label = document.createElement('label');
                     label.className = 'checkbox checkbox-item';
@@ -92,7 +182,6 @@
                     checkboxContainer.appendChild(label);
                 }
 
-                // 2. Create section element and table (renders for all sections including File Information)
                 const sectionEl = document.createElement('section');
                 sectionEl.className = 'info-section';
                 sectionEl.id = sectionName.toLowerCase().replace(/\s+/g, '-');
@@ -125,12 +214,10 @@
             }
         }
 
-        // 1. Click "Upload File" -> opens hidden file selector
         uploadBtn.addEventListener('click', () => {
             fileInput.click();
         });
 
-        // 2. When a file is chosen, send to /parse-file and auto-generate sections
         fileInput.addEventListener('change', async () => {
             if (fileInput.files.length === 0) return;
 
@@ -164,7 +251,6 @@
             }
         });
 
-        // 3. Remove File button clears input, active file indicator, and generated sections
         removeFileBtn.addEventListener('click', () => {
             fileInput.value = '';
             activeFileLabel.innerHTML = '<label>Active File: None</label>';
@@ -172,7 +258,6 @@
             sectionsContainer.innerHTML = '';
         });
 
-        // Helper function for processing modification requests
         async function submitModification(sectionsValue, buttonElement, originalText) {
             if (fileInput.files.length === 0) {
                 alert('Please select a file first.');
@@ -213,7 +298,6 @@
             }
         }
 
-        // 4. Remove Selected button sends ONLY checked section names
         removeSelectedBtn.addEventListener('click', async () => {
             const checkboxes = document.querySelectorAll('input[name="remove-section"]:checked');
             if (checkboxes.length === 0) {
@@ -225,7 +309,6 @@
             await submitModification(sections, removeSelectedBtn, 'Remove Selected Confidential Information');
         });
 
-        // 5. Remove All button sends 'all'
         removeAllBtn.addEventListener('click', async () => {
             await submitModification('all', removeAllBtn, 'Remove All Confidential Information');
         });
@@ -233,3 +316,4 @@
 
 </body>
 </html>
+
