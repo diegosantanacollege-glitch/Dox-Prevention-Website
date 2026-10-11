@@ -27,7 +27,7 @@
             overflow-x: hidden;
         }
 
-        /* ---------- Background video (refined color correction) ---------- */
+        /* ---------- Background video (color corrected) ---------- */
         #bg-video {
             position: fixed;
             inset: 0;
@@ -313,13 +313,13 @@
             cursor: pointer;
         }
 
-        /* ---------- Garden (Anchored at the very bottom) ---------- */
+        /* ---------- Garden (Strictly anchored at the far bottom edge) ---------- */
         #garden {
             position: fixed;
             left: 0;
             right: 0;
             bottom: 0;
-            height: 250px;
+            height: 220px;
             z-index: 3;
             pointer-events: none;
             transform: translateZ(0);
@@ -406,7 +406,7 @@
     <div id="margin-left" class="margin-garden" aria-hidden="true"></div>
     <div id="margin-right" class="margin-garden" aria-hidden="true"></div>
 
-    <!-- Anchored Bottom Garden -->
+    <!-- Anchored Bottom White Lilies Garden -->
     <div id="garden" aria-hidden="true"></div>
 
     <!-- Popup with original pictures -->
@@ -483,7 +483,7 @@
             bgVideo.play();
         });
 
-        /* ---------------- PAINTERLY FLOWER GENERATOR ---------------- */
+        /* ---------------- WHITE LILIES & PAINTERLY FLOWER GENERATOR ---------------- */
         const NS = 'http://www.w3.org/2000/svg';
         const STEM = '#79a882';
         const LEAF = '#588c65';
@@ -502,6 +502,30 @@
             return e;
         }
 
+        function makeWhiteLily(h) {
+            const w = 65, cx = 32, headY = 28;
+            const svg = el('svg', { width: w, height: h, viewBox: `0 0 ${w} ${h}` });
+            
+            // Stem
+            el('path', { d: `M${cx} ${h} Q${cx - 6} ${h * 0.5} ${cx} ${headY + 10}`, stroke: STEM, 'stroke-width': 3.5, fill: 'none', 'stroke-linecap': 'round', opacity: '0.9' }, svg);
+            // Leaves
+            el('path', { d: `M${cx - 2} ${h * 0.7} q-20 -6 -14 -28 q18 4 14 28z`, fill: LEAF, opacity: '0.85' }, svg);
+            el('path', { d: `M${cx - 1} ${h * 0.45} q18 -4 14 -22 q-16 2 -14 22z`, fill: LEAF, opacity: '0.85' }, svg);
+
+            // Lily Flower Head (White & elegant petals)
+            const g = el('g', { transform: `translate(${cx} ${headY})` }, svg);
+            for (let i = 0; i < 6; i++) {
+                el('path', { d: 'M0 0 Q-10 -22 0 -36 Q10 -22 0 0', fill: '#ffffff', stroke: '#e0e0e0', 'stroke-width': '0.8', transform: `rotate(${i * 60})`, opacity: '0.95' }, g);
+            }
+            // Center pistils/stamens
+            for (let i = 0; i < 3; i++) {
+                el('line', { x1: 0, y1: 0, x2: (i - 1) * 4, y2: -12, stroke: '#d4af37', 'stroke-width': '1.2' }, g);
+                el('circle', { cx: (i - 1) * 4, cy: -12, r: 1.5, fill: '#ffeb3b' }, g);
+            }
+            el('circle', { r: 3.5, fill: '#f4d03f' }, g);
+            return { svg, w, headX: cx, headY };
+        }
+
         function makePainterlyDaisy(h, isColorful = false) {
             const w = 70, cx = 35, headY = 34;
             const svg = el('svg', { width: w, height: h, viewBox: `0 0 ${w} ${h}` });
@@ -516,31 +540,13 @@
             for (let i = 0; i < 10; i++) {
                 el('ellipse', { cx: 0, cy: -14, rx: 6, ry: 14, fill: palette.main, stroke: palette.shadow, 'stroke-width': '0.8', 'stroke-opacity': '0.6', transform: `rotate(${i * 36})`, opacity: '0.92' }, g);
             }
-            for (let i = 0; i < 10; i++) {
-                el('ellipse', { cx: 0, cy: -10, rx: 3.5, ry: 9, fill: palette.soft, transform: `rotate(${i * 36 + 18})`, opacity: '0.7' }, g);
-            }
             el('circle', { r: 7.5, fill: '#f4d03f', stroke: '#d4af37', 'stroke-width': '1' }, g);
             return { svg, w, headX: cx, headY };
         }
 
-        function makePainterlyTulip(h, isColorful = false) {
-            const w = 60, cx = 30, headY = 30;
-            const svg = el('svg', { width: w, height: h, viewBox: `0 0 ${w} ${h}` });
-            el('path', { d: `M${cx} ${h} Q${cx + 8} ${h * 0.45} ${cx} ${headY + 12}`, stroke: STEM, 'stroke-width': 4, fill: 'none', 'stroke-linecap': 'round', opacity: '0.9' }, svg);
-            el('path', { d: `M${cx + 1} ${h * 0.8} q-28 -12 -18 -45 q25 18 18 45z`, fill: LEAF, opacity: '0.85' }, svg);
-
-            const g = el('g', { transform: `translate(${cx} ${headY})` }, svg);
-            const palette = isColorful ? PAINTERLY_PALETTE[Math.floor(Math.random() * PAINTERLY_PALETTE.length)] : { main: '#ffffff', shadow: '#cccccc', soft: '#f0f0f0' };
-
-            el('path', { d: 'M-15 -6 Q-18 16 0 22 Q18 16 15 -6 L8 -22 L0 -8 L-8 -22 Z', fill: palette.main, stroke: palette.shadow, 'stroke-width': '1', opacity: '0.9' }, g);
-            el('path', { d: 'M-10 -10 Q-12 12 0 18 Q12 12 10 -10', fill: palette.soft, opacity: '0.6' }, g);
-            return { svg, w, headX: cx, headY };
-        }
-
-        const makers = [makePainterlyDaisy, makePainterlyTulip];
         let plants = [];
 
-        /* ---------------- BOTTOM GARDEN ---------------- */
+        /* ---------------- STRICTLY ANCHORED BOTTOM GARDEN (WHITE LILIES) ---------------- */
         const garden = document.getElementById('garden');
 
         function buildGarden() {
@@ -549,9 +555,8 @@
             const vw = window.innerWidth;
             const count = Math.max(12, Math.round(vw / 75));
             for (let i = 0; i < count; i++) {
-                const maker = makers[Math.floor(Math.random() * makers.length)];
-                const h = 130 + Math.random() * 120;
-                const { svg, w, headX, headY } = maker(h, false);
+                const h = 130 + Math.random() * 110;
+                const { svg, w, headX, headY } = makeWhiteLily(h);
                 const wrap = document.createElement('div');
                 wrap.className = 'plant';
                 const left = (i + 0.2 + Math.random() * 0.6) / count * vw - w / 2;
@@ -580,19 +585,17 @@
             leftContainer.innerHTML = '';
             rightContainer.innerHTML = '';
 
-            const count = 4; // Bushel clusters per side
+            const count = 4;
             const winHeight = window.innerHeight;
 
             for (let i = 0; i < count; i++) {
-                // Left bushel cluster container
                 const clusterL = document.createElement('div');
                 clusterL.style.position = 'absolute';
                 clusterL.style.top = (i * (winHeight / count) + 60) + 'px';
                 clusterL.style.left = '-10px';
 
                 for (let j = 0; j < 3; j++) {
-                    const makerL = makers[Math.floor(Math.random() * makers.length)];
-                    const itemL = makerL(90 + Math.random() * 40, true);
+                    const itemL = makePainterlyDaisy(90 + Math.random() * 40, true);
                     const subL = document.createElement('div');
                     subL.style.position = 'absolute';
                     subL.style.transform = `translate(${j * 8}px, ${j * 12}px) rotate(${Math.random() * 25 - 12}deg) scale(0.85)`;
@@ -601,15 +604,13 @@
                 }
                 leftContainer.appendChild(clusterL);
 
-                // Right bushel cluster container
                 const clusterR = document.createElement('div');
                 clusterR.style.position = 'absolute';
                 clusterR.style.top = (i * (winHeight / count) + 60) + 'px';
                 clusterR.style.right = '-10px';
 
                 for (let j = 0; j < 3; j++) {
-                    const makerR = makers[Math.floor(Math.random() * makers.length)];
-                    const itemR = makerR(90 + Math.random() * 40, true);
+                    const itemR = makePainterlyDaisy(90 + Math.random() * 40, true);
                     const subR = document.createElement('div');
                     subR.style.position = 'absolute';
                     subR.style.transform = `translate(${-j * 8}px, ${j * 12}px) rotate(${Math.random() * 25 - 12}deg) scale(0.85) scaleX(-1)`;
