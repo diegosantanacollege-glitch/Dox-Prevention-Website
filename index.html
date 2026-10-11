@@ -44,7 +44,7 @@
             background: radial-gradient(circle at center, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%);
         }
 
-        /* ---------- Classical Sun Motif (Top Right, rendered via flower process) ---------- */
+        /* ---------- Classical Sun Motif (Top Right) ---------- */
         .sun-motif {
             position: fixed;
             top: 25px;
@@ -54,6 +54,18 @@
             z-index: 1;
             pointer-events: none;
             filter: drop-shadow(0 0 18px rgba(255, 193, 7, 0.5));
+        }
+
+        /* ---------- Greek Ruins Motif (Far Right Bottom) ---------- */
+        .ruins-motif {
+            position: fixed;
+            bottom: 0;
+            right: 10px;
+            width: 130px;
+            height: 280px;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.85;
         }
 
         /* ---------- Margin Flower Bushels ---------- */
@@ -385,6 +397,7 @@
             h1 { transform: scaleY(1.45); }
             .margin-garden { display: none; }
             .sun-motif { display: none; }
+            .ruins-motif { display: none; }
         }
         @media (prefers-reduced-motion: reduce) {
             * { transition: none !important; }
@@ -399,8 +412,11 @@
     </video>
     <div class="bg-overlay"></div>
 
-    <!-- Classical Sun Motif (Generated programmatically to match flower process) -->
+    <!-- Classical Sun Motif (Top Right) -->
     <div id="sun-container" class="sun-motif" aria-hidden="true"></div>
+
+    <!-- Greek Ruins Motif (Far Right Bottom, programmatically built) -->
+    <div id="ruins-container" class="ruins-motif" aria-hidden="true"></div>
 
     <!-- Margin Flower Bushels (Left & Right) -->
     <div id="margin-left" class="margin-garden" aria-hidden="true"></div>
@@ -482,7 +498,7 @@
             bgVideo.play();
         });
 
-        /* ---------------- FLOWER & SUN SVG GENERATOR ENGINE ---------------- */
+        /* ---------------- SVG GENERATOR ENGINE (FLOWER, SUN & RUINS) ---------------- */
         const NS = 'http://www.w3.org/2000/svg';
         const STEM = '#79a882';
         const LEAF = '#588c65';
@@ -539,19 +555,45 @@
             return { svg, w, headX: cx, headY };
         }
 
-        /* Generate the Sun via the same flower/petal drawing process */
+        /* Build Sun via programmatical vector drawing */
         function buildSun() {
             const container = document.getElementById('sun-container');
             if (!container) return;
             const svg = el('svg', { width: '90', height: '90', viewBox: '0 0 90 90' });
             const g = el('g', { transform: 'translate(45 45)' }, svg);
             
-            // Sun rays as flower-like petals radiating outwards
             for (let i = 0; i < 12; i++) {
                 el('ellipse', { cx: 0, cy: -28, rx: 4, ry: 12, fill: '#ffb703', stroke: '#d4af37', 'stroke-width': '0.8', transform: `rotate(${i * 30})`, opacity: '0.9' }, g);
             }
-            // Sun Core
             el('circle', { r: 16, fill: '#f4d03f', stroke: '#ffffff', 'stroke-width': '1.5' }, g);
+            container.appendChild(svg);
+        }
+
+        /* Build Greek Ruins via programmatical vector drawing */
+        function buildRuins() {
+            const container = document.getElementById('ruins-container');
+            if (!container) return;
+            const svg = el('svg', { width: '130', height: '280', viewBox: '0 0 130 280' });
+            
+            // Base platform fragment
+            el('rect', { x: '10', y: '260', width: '110', height: '20', fill: '#e0e0e0', stroke: '#ffffff', 'stroke-width': '1' }, svg);
+            
+            // Tall broken pillar left
+            el('rect', { x: '25', y: '50', width: '32', height: '210', fill: '#f5f5f5', stroke: '#cccccc', 'stroke-width': '1.2' }, svg);
+            for(let i = 1; i < 4; i++) {
+                el('line', { x1: 25 + i*8, y1: 50, x2: 25 + i*8, y2: 260, stroke: '#d0d0d0', 'stroke-width': '1' }, svg);
+            }
+            // Jagged broken top for left pillar
+            el('path', { d: 'M25 50 L30 42 L38 48 L46 40 L57 52 Z', fill: '#ffffff', stroke: '#cccccc', 'stroke-width': '1' }, svg);
+
+            // Shorter pillar right
+            el('rect', { x: '75', y: '110', width: '28', height: '150', fill: '#ebebeb', stroke: '#cccccc', 'stroke-width': '1.2' }, svg);
+            for(let i = 1; i < 3; i++) {
+                el('line', { x1: 75 + i*9, y1: 110, x2: 75 + i*9, y2: 260, stroke: '#c8c8c8', 'stroke-width': '1' }, svg);
+            }
+            // Jagged broken top for right pillar
+            el('path', { d: 'M75 110 L82 102 L92 108 L103 112 Z', fill: '#ffffff', stroke: '#cccccc', 'stroke-width': '1' }, svg);
+
             container.appendChild(svg);
         }
 
@@ -663,6 +705,7 @@
         }
 
         buildSun();
+        buildRuins();
         buildGarden();
         buildMargins();
         requestAnimationFrame(tick);
