@@ -489,20 +489,16 @@
             const w = 70, cx = 35, headY = 34;
             const svg = el('svg', { width: w, height: h, viewBox: `0 0 ${w} ${h}` });
             
-            // Painterly curved stem
             el('path', { d: `M${cx} ${h} Q${cx - 10} ${h * 0.55} ${cx} ${headY}`, stroke: STEM, 'stroke-width': 4, fill: 'none', 'stroke-linecap': 'round', opacity: '0.9' }, svg);
-            // Organic textured leaves
             el('path', { d: `M${cx - 3} ${h * 0.75} q-25 -8 -20 -30 q22 6 20 30z`, fill: LEAF, opacity: '0.85' }, svg);
             el('path', { d: `M${cx - 2} ${h * 0.5} q22 -6 20 -26 q-20 4 -20 26z`, fill: LEAF, opacity: '0.85' }, svg);
 
             const g = el('g', { transform: `translate(${cx} ${headY})` }, svg);
             const palette = isColorful ? PAINTERLY_PALETTE[Math.floor(Math.random() * PAINTERLY_PALETTE.length)] : { main: '#ffffff', shadow: '#dddddd', soft: '#f0f0f0' };
 
-            // Layered petals for a textured brushstroke feel
             for (let i = 0; i < 10; i++) {
                 el('ellipse', { cx: 0, cy: -14, rx: 6, ry: 14, fill: palette.main, stroke: palette.shadow, 'stroke-width': '0.8', 'stroke-opacity': '0.6', transform: `rotate(${i * 36})`, opacity: '0.92' }, g);
             }
-            // Inner soft gradient petals
             for (let i = 0; i < 10; i++) {
                 el('ellipse', { cx: 0, cy: -10, rx: 3.5, ry: 9, fill: palette.soft, transform: `rotate(${i * 36 + 18})`, opacity: '0.7' }, g);
             }
@@ -578,7 +574,7 @@
                 wrapL.style.position = 'absolute';
                 wrapL.style.top = (i * (winHeight / count) + Math.random() * 50) + 'px';
                 wrapL.style.left = '-12px';
-                wrapL.style.transform = `rotate(${Math.random() * 36 - 18}deg) scale(0.9)';
+                wrapL.style.transform = `rotate(${Math.random() * 36 - 18}deg) scale(0.9)`;
                 wrapL.appendChild(itemL.svg);
                 leftContainer.appendChild(wrapL);
 
@@ -589,7 +585,7 @@
                 wrapR.style.position = 'absolute';
                 wrapR.style.top = (i * (winHeight / count) + Math.random() * 50) + 'px';
                 wrapR.style.right = '-12px';
-                wrapR.style.transform = `rotate(\${Math.random() * 36 - 18}deg) scale(0.9) scaleX(-1)';
+                wrapR.style.transform = `rotate(${Math.random() * 36 - 18}deg) scale(0.9) scaleX(-1)`;
                 wrapR.appendChild(itemR.svg);
                 rightContainer.appendChild(wrapR);
             }
