@@ -49,9 +49,10 @@
             position: fixed;
             top: 0;
             bottom: 0;
-            width: 120px;
+            width: 140px;
             z-index: 1;
             pointer-events: none;
+            overflow: hidden;
         }
         #margin-left { left: 0; }
         #margin-right { right: 0; }
@@ -62,7 +63,7 @@
             z-index: 2;
             width: min(920px, 86%);
             margin: 0 auto;
-            padding: 70px 0 280px;
+            padding: 70px 0 320px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -331,11 +332,39 @@
         }
         .plant svg { display: block; overflow: visible; }
 
+        /* ---------- Greek Key Footer & Texture ---------- */
+        .greek-footer-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            margin-top: 30px;
+        }
+        .greek-border {
+            width: 100%;
+            max-width: 600px;
+            height: 18px;
+            background-image: repeating-linear-gradient(
+                90deg,
+                var(--gold),
+                var(--gold) 10px,
+                transparent 10px,
+                transparent 20px
+            );
+            border-top: 2px solid var(--white);
+            border-bottom: 2px solid var(--white);
+            opacity: 0.85;
+            mask-image: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent);
+            -webkit-mask-image: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent);
+        }
         footer {
-            font-size: 0.8rem;
+            font-size: 0.82rem;
             font-weight: 500;
             text-align: center;
+            letter-spacing: 0.5px;
             text-shadow: 0 1px 8px #000;
+            color: rgba(255, 255, 255, 0.85);
         }
 
         @media (max-width: 600px) {
@@ -409,7 +438,10 @@
 
         <div id="sections-container"></div>
 
-        <footer>Files are processed by your local server at localhost:9000.</footer>
+        <div class="greek-footer-container">
+            <div class="greek-border"></div>
+            <footer>Files are processed by your local server at localhost:9000.</footer>
+        </div>
     </main>
 
     <script>
@@ -434,11 +466,17 @@
             bgVideo.play();
         });
 
-        /* ---------------- FLOWER DRAWINGS & GENERATOR ---------------- */
+        /* ---------------- PAINTERLY FLOWER GENERATOR ---------------- */
         const NS = 'http://www.w3.org/2000/svg';
-        const STEM = '#9fd8a8';
-        const LEAF = '#7cc58b';
-        const COLOR_PALETTE = ['#ff758f', '#ffb703', '#8338ec', '#3a86ff', '#fb8500', '#ff006e', '#06d6a0'];
+        const STEM = '#79a882';
+        const LEAF = '#588c65';
+        const PAINTERLY_PALETTE = [
+            { main: '#ff5c8a', shadow: '#c72c5a', soft: '#ff99b6' },
+            { main: '#ff9e3b', shadow: '#c46b07', soft: '#ffc87c' },
+            { main: '#8c52ff', shadow: '#511cb5', soft: '#bc96ff' },
+            { main: '#38b6ff', shadow: '#0c73b8', soft: '#82d3ff' },
+            { main: '#ff3333', shadow: '#b50606', soft: '#ff8080' }
+        ];
 
         function el(name, attrs, parent) {
             const e = document.createElementNS(NS, name);
@@ -447,48 +485,46 @@
             return e;
         }
 
-        function makeDaisy(h, colorful = false) {
+        function makePainterlyDaisy(h, isColorful = false) {
             const w = 70, cx = 35, headY = 34;
             const svg = el('svg', { width: w, height: h, viewBox: `0 0 ${w} ${h}` });
-            el('path', { d: `M${cx} ${h} Q${cx - 8} ${h * 0.55} ${cx} ${headY}`, stroke: STEM, 'stroke-width': 3.5, fill: 'none', 'stroke-linecap': 'round' }, svg);
-            el('path', { d: `M${cx - 3} ${h * 0.7} q-22 -6 -24 -22 q20 2 24 22z`, fill: LEAF }, svg);
-            el('path', { d: `M${cx - 2} ${h * 0.55} q20 -4 24 -20 q-20 0 -24 20z`, fill: LEAF }, svg);
+            
+            // Painterly curved stem
+            el('path', { d: `M${cx} ${h} Q${cx - 10} ${h * 0.55} ${cx} ${headY}`, stroke: STEM, 'stroke-width': 4, fill: 'none', 'stroke-linecap': 'round', opacity: '0.9' }, svg);
+            // Organic textured leaves
+            el('path', { d: `M${cx - 3} ${h * 0.75} q-25 -8 -20 -30 q22 6 20 30z`, fill: LEAF, opacity: '0.85' }, svg);
+            el('path', { d: `M${cx - 2} ${h * 0.5} q22 -6 20 -26 q-20 4 -20 26z`, fill: LEAF, opacity: '0.85' }, svg);
+
             const g = el('g', { transform: `translate(${cx} ${headY})` }, svg);
-            const petalColor = colorful ? COLOR_PALETTE[Math.floor(Math.random() * COLOR_PALETTE.length)] : '#fff';
-            for (let i = 0; i < 12; i++) {
-                el('ellipse', { cx: 0, cy: -15, rx: 5, ry: 13, fill: petalColor, stroke: 'rgba(0,0,0,0.12)', 'stroke-width': 0.6, transform: `rotate(${i * 30})` }, g);
+            const palette = isColorful ? PAINTERLY_PALETTE[Math.floor(Math.random() * PAINTERLY_PALETTE.length)] : { main: '#ffffff', shadow: '#dddddd', soft: '#f0f0f0' };
+
+            // Layered petals for a textured brushstroke feel
+            for (let i = 0; i < 10; i++) {
+                el('ellipse', { cx: 0, cy: -14, rx: 6, ry: 14, fill: palette.main, stroke: palette.shadow, 'stroke-width': '0.8', 'stroke-opacity': '0.6', transform: `rotate(${i * 36})`, opacity: '0.92' }, g);
             }
-            el('circle', { r: 7, fill: '#d4af37' }, g);
+            // Inner soft gradient petals
+            for (let i = 0; i < 10; i++) {
+                el('ellipse', { cx: 0, cy: -10, rx: 3.5, ry: 9, fill: palette.soft, transform: `rotate(${i * 36 + 18})`, opacity: '0.7' }, g);
+            }
+            el('circle', { r: 7.5, fill: '#f4d03f', stroke: '#d4af37', 'stroke-width': '1' }, g);
             return { svg, w, headX: cx, headY };
         }
 
-        function makeTulip(h, colorful = false) {
-            const w = 56, cx = 28, headY = 30;
+        function makePainterlyTulip(h, isColorful = false) {
+            const w = 60, cx = 30, headY = 30;
             const svg = el('svg', { width: w, height: h, viewBox: `0 0 ${w} ${h}` });
-            el('path', { d: `M${cx} ${h} Q${cx + 7} ${h * 0.5} ${cx} ${headY + 14}`, stroke: STEM, 'stroke-width': 3.5, fill: 'none', 'stroke-linecap': 'round' }, svg);
-            el('path', { d: `M${cx + 1} ${h * 0.8} q-24 -10 -20 -42 q22 14 20 42z`, fill: LEAF }, svg);
+            el('path', { d: `M${cx} ${h} Q${cx + 8} ${h * 0.45} ${cx} ${headY + 12}`, stroke: STEM, 'stroke-width': 4, fill: 'none', 'stroke-linecap': 'round', opacity: '0.9' }, svg);
+            el('path', { d: `M${cx + 1} ${h * 0.8} q-28 -12 -18 -45 q25 18 18 45z`, fill: LEAF, opacity: '0.85' }, svg);
+
             const g = el('g', { transform: `translate(${cx} ${headY})` }, svg);
-            const tulipColor = colorful ? COLOR_PALETTE[Math.floor(Math.random() * COLOR_PALETTE.length)] : '#fff';
-            el('path', { d: 'M-14 -4 Q-16 18 0 20 Q16 18 14 -4 L7 -20 L0 -6 L-7 -20 Z', fill: tulipColor, stroke: 'rgba(0,0,0,0.15)', 'stroke-width': 0.8 }, g);
-            el('path', { d: 'M0 -6 Q-5 8 0 20 Q5 8 0 -6', fill: 'rgba(212,175,55,0.45)' }, g);
+            const palette = isColorful ? PAINTERLY_PALETTE[Math.floor(Math.random() * PAINTERLY_PALETTE.length)] : { main: '#ffffff', shadow: '#cccccc', soft: '#f0f0f0' };
+
+            el('path', { d: 'M-15 -6 Q-18 16 0 22 Q18 16 15 -6 L8 -22 L0 -8 L-8 -22 Z', fill: palette.main, stroke: palette.shadow, 'stroke-width': '1', opacity: '0.9' }, g);
+            el('path', { d: 'M-10 -10 Q-12 12 0 18 Q12 12 10 -10', fill: palette.soft, opacity: '0.6' }, g);
             return { svg, w, headX: cx, headY };
         }
 
-        function makeBlades(h) {
-            const w = 60, cx = 30;
-            const svg = el('svg', { width: w, height: h, viewBox: `0 0 ${w} ${h}` });
-            const blades = [[-20, 0.95], [-8, 1], [4, 0.85], [16, 0.7], [26, 0.9]];
-            blades.forEach(([dx, s]) => {
-                const top = h * (1 - s);
-                el('path', { d: `M${cx + dx * 0.3} ${h} Q${cx + dx * 0.4} ${h * 0.5} ${cx + dx} ${top}`, stroke: LEAF, 'stroke-width': 4, fill: 'none', 'stroke-linecap': 'round' }, svg);
-            });
-            [[-20, 0.95], [16, 0.7]].forEach(([dx, s]) => {
-                el('circle', { cx: cx + dx, cy: h * (1 - s), r: 4, fill: '#d4af37' }, svg);
-            });
-            return { svg, w, headX: cx, headY: 6 };
-        }
-
-        const makers = [makeDaisy, makeTulip, makeBlades, makeDaisy, makeTulip];
+        const makers = [makePainterlyDaisy, makePainterlyTulip];
         let plants = [];
 
         /* ---------------- BOTTOM GARDEN (PARALLAX) ---------------- */
@@ -498,10 +534,10 @@
             garden.innerHTML = '';
             plants = [];
             const vw = window.innerWidth;
-            const count = Math.max(10, Math.round(vw / 80));
+            const count = Math.max(10, Math.round(vw / 85));
             for (let i = 0; i < count; i++) {
                 const maker = makers[Math.floor(Math.random() * makers.length)];
-                const h = 120 + Math.random() * 150;
+                const h = 130 + Math.random() * 140;
                 const { svg, w, headX, headY } = maker(h, false);
                 const wrap = document.createElement('div');
                 wrap.className = 'plant';
@@ -522,38 +558,38 @@
             }
         }
 
-        /* ---------------- MARGIN COLORFUL FLOWER DRAWINGS ---------------- */
+        /* ---------------- MARGIN COLORFUL PAINTERLY FLOWERS ---------------- */
         function buildMargins() {
             const leftContainer = document.getElementById('margin-left');
             const rightContainer = document.getElementById('margin-right');
+            if (!leftContainer || !rightContainer) return;
+            
             leftContainer.innerHTML = '';
             rightContainer.innerHTML = '';
 
-            const count = 6;
+            const count = 7;
             const winHeight = window.innerHeight;
 
             for (let i = 0; i < count; i++) {
-                // Left margin decorative colorful plant
                 const makerL = makers[Math.floor(Math.random() * makers.length)];
-                const hl = 90 + Math.random() * 80;
+                const hl = 100 + Math.random() * 90;
                 const itemL = makerL(hl, true);
                 const wrapL = document.createElement('div');
                 wrapL.style.position = 'absolute';
-                wrapL.style.top = (i * (winHeight / count) + Math.random() * 40) + 'px';
-                wrapL.style.left = '-15px';
-                wrapL.style.transform = `rotate(${Math.random() * 30 - 15}deg) scale(0.85)`;
+                wrapL.style.top = (i * (winHeight / count) + Math.random() * 50) + 'px';
+                wrapL.style.left = '-12px';
+                wrapL.style.transform = `rotate(${Math.random() * 36 - 18}deg) scale(0.9)';
                 wrapL.appendChild(itemL.svg);
                 leftContainer.appendChild(wrapL);
 
-                // Right margin decorative colorful plant
                 const makerR = makers[Math.floor(Math.random() * makers.length)];
-                const hr = 90 + Math.random() * 80;
+                const hr = 100 + Math.random() * 90;
                 const itemR = makerR(hr, true);
                 const wrapR = document.createElement('div');
                 wrapR.style.position = 'absolute';
-                wrapR.style.top = (i * (winHeight / count) + Math.random() * 40) + 'px';
-                wrapR.style.right = '-15px';
-                wrapR.style.transform = `rotate(${Math.random() * 30 - 15}deg) scale(0.85) scaleX(-1)`;
+                wrapR.style.top = (i * (winHeight / count) + Math.random() * 50) + 'px';
+                wrapR.style.right = '-12px';
+                wrapR.style.transform = `rotate(\${Math.random() * 36 - 18}deg) scale(0.9) scaleX(-1)';
                 wrapR.appendChild(itemR.svg);
                 rightContainer.appendChild(wrapR);
             }
@@ -569,7 +605,6 @@
             last = now;
             const R = 190;
             
-            // Parallax offset shift based on scroll position
             const scrollY = window.scrollY;
             garden.style.transform = `translate3d(0, ${-scrollY * 0.15}px, 0)`;
 
