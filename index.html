@@ -44,17 +44,16 @@
             background: radial-gradient(circle at center, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.7) 100%);
         }
 
-        /* ---------- Classical Sun Motif (Top Right) ---------- */
+        /* ---------- Classical Sun Motif (Top Right, rendered via flower process) ---------- */
         .sun-motif {
             position: fixed;
-            top: 30px;
-            right: 40px;
-            width: 70px;
-            height: 70px;
+            top: 25px;
+            right: 35px;
+            width: 90px;
+            height: 90px;
             z-index: 1;
             pointer-events: none;
-            opacity: 0.85;
-            filter: drop-shadow(0 0 16px rgba(212, 175, 55, 0.6));
+            filter: drop-shadow(0 0 18px rgba(255, 193, 7, 0.5));
         }
 
         /* ---------- Margin Flower Bushels ---------- */
@@ -326,7 +325,7 @@
             cursor: pointer;
         }
 
-        /* ---------- Garden (Strictly pinned to the absolute bottom screen edge) ---------- */
+        /* ---------- Garden (Fixed Bottom White Lilies) ---------- */
         #garden {
             position: fixed;
             left: 0;
@@ -344,7 +343,7 @@
         }
         .plant svg { display: block; overflow: visible; }
 
-        /* ---------- Greek Pillar & Footer Container ---------- */
+        /* ---------- Greek Border & Footer Container ---------- */
         .greek-footer-container {
             width: 100%;
             display: flex;
@@ -353,21 +352,6 @@
             gap: 14px;
             margin-top: 40px;
             position: relative;
-        }
-        .greek-pillar {
-            width: 90px;
-            height: 40px;
-            background: repeating-linear-gradient(
-                90deg,
-                rgba(255,255,255,0.85),
-                rgba(255,255,255,0.85) 12px,
-                rgba(212,175,55,0.6) 12px,
-                rgba(212,175,55,0.6) 16px
-            );
-            border: 2px solid var(--white);
-            border-radius: 3px;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
-            margin-bottom: 4px;
         }
         .greek-border {
             width: 100%;
@@ -415,22 +399,10 @@
     </video>
     <div class="bg-overlay"></div>
 
-    <!-- Classical Sun Motif (Top Right) -->
-    <svg class="sun-motif" viewBox="0 0 100 100" aria-hidden="true">
-        <circle cx="50" cy="50" r="22" fill="#d4af37" stroke="#ffffff" stroke-width="3"/>
-        <g stroke="#d4af37" stroke-width="3" stroke-linecap="round">
-            <line x1="50" y1="10" x2="50" y2="2"/>
-            <line x1="50" y1="90" x2="50" y2="98"/>
-            <line x1="10" y1="50" x2="2" y2="50"/>
-            <line x1="90" y1="50" x2="98" y2="50"/>
-            <line x1="22" y1="22" x2="16" y2="16"/>
-            <line x1="78" y1="78" x2="84" y2="84"/>
-            <line x1="22" y1="78" x2="16" y2="84"/>
-            <line x1="78" y1="22" x2="84" y2="16"/>
-        </g>
-    </svg>
+    <!-- Classical Sun Motif (Generated programmatically to match flower process) -->
+    <div id="sun-container" class="sun-motif" aria-hidden="true"></div>
 
-    <!-- Margin Flower Bushels -->
+    <!-- Margin Flower Bushels (Left & Right) -->
     <div id="margin-left" class="margin-garden" aria-hidden="true"></div>
     <div id="margin-right" class="margin-garden" aria-hidden="true"></div>
 
@@ -483,7 +455,6 @@
         <div id="sections-container"></div>
 
         <div class="greek-footer-container">
-            <div class="greek-pillar"></div>
             <div class="greek-border"></div>
             <footer>Files are processed by your local server at localhost:9000.</footer>
         </div>
@@ -511,7 +482,7 @@
             bgVideo.play();
         });
 
-        /* ---------------- WHITE LILIES & PAINTERLY FLOWER GENERATOR ---------------- */
+        /* ---------------- FLOWER & SUN SVG GENERATOR ENGINE ---------------- */
         const NS = 'http://www.w3.org/2000/svg';
         const STEM = '#79a882';
         const LEAF = '#588c65';
@@ -568,9 +539,25 @@
             return { svg, w, headX: cx, headY };
         }
 
+        /* Generate the Sun via the same flower/petal drawing process */
+        function buildSun() {
+            const container = document.getElementById('sun-container');
+            if (!container) return;
+            const svg = el('svg', { width: '90', height: '90', viewBox: '0 0 90 90' });
+            const g = el('g', { transform: 'translate(45 45)' }, svg);
+            
+            // Sun rays as flower-like petals radiating outwards
+            for (let i = 0; i < 12; i++) {
+                el('ellipse', { cx: 0, cy: -28, rx: 4, ry: 12, fill: '#ffb703', stroke: '#d4af37', 'stroke-width': '0.8', transform: `rotate(${i * 30})`, opacity: '0.9' }, g);
+            }
+            // Sun Core
+            el('circle', { r: 16, fill: '#f4d03f', stroke: '#ffffff', 'stroke-width': '1.5' }, g);
+            container.appendChild(svg);
+        }
+
         let plants = [];
 
-        /* ---------------- FIXED BOTTOM GARDEN (WHITE LILIES) ---------------- */
+        /* ---------------- FIXED BOTTOM GARDEN ---------------- */
         const garden = document.getElementById('garden');
 
         function buildGarden() {
@@ -600,7 +587,7 @@
             }
         }
 
-        /* ---------------- MARGIN FLOWER BUSHELS ---------------- */
+        /* ---------------- MARGIN FLOWER BUSHELS (LEFT & RIGHT) ---------------- */
         function buildMargins() {
             const leftContainer = document.getElementById('margin-left');
             const rightContainer = document.getElementById('margin-right');
@@ -613,6 +600,7 @@
             const winHeight = window.innerHeight;
 
             for (let i = 0; i < count; i++) {
+                // Left Bushel
                 const clusterL = document.createElement('div');
                 clusterL.style.position = 'absolute';
                 clusterL.style.top = (i * (winHeight / count) + 60) + 'px';
@@ -628,6 +616,7 @@
                 }
                 leftContainer.appendChild(clusterL);
 
+                // Right Bushel
                 const clusterR = document.createElement('div');
                 clusterR.style.position = 'absolute';
                 clusterR.style.top = (i * (winHeight / count) + 60) + 'px';
@@ -673,6 +662,7 @@
             requestAnimationFrame(tick);
         }
 
+        buildSun();
         buildGarden();
         buildMargins();
         requestAnimationFrame(tick);
